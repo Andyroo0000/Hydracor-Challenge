@@ -5,21 +5,48 @@ class Store_holder():
         self.book_holder = []
         self.anime_holder = []
         self.game_holder = []
-
+    
     # def sort_by_attribute(self, attr):
     #     func_map = {
     #         "book": Media.is_type_book,
     #         "anime": Media.is_type_anime,
     #         "rating": Media.
             
-    #     }
+    #     ]
 
     #     return self.instance_of_media.sort(lambda x: func_map[attr])
+
+    
+    def main(self):
+            
+        while True:
+            print("\n--- Media Tracker ---")
+            print("1. Add media")
+            print("2. View all")
+            print("3. Sort")
+            print("4. Quit")
+            
+            choice = int(input("Enter choice: "))
+
+            options = {
+                1: self.user_add,
+                2: self.display_all,
+                3: self.sort_by_attribute,
+                4: None,
+            }
+
+            if choice == 4:
+                break
+            elif choice in options:
+                options[choice]()
+            else:
+                print("Invalid input")
+
     def user_add(self):
         media_type = str(input("Do you want to enter a book, game, or anime? ")).lower()
         media_name = str(input("What is the name? ")).lower()
         media_rating = str(input("What would you rate it out of 10? ")).lower()
-        media_status = str(input("What is your completion status? ")).lower()
+        media_status = str(input("What is your completion status?(Enter a percentage) ")).lower()
         media_notes = str(input("Any other notes or comments about it? ")).lower()
 
         type_map = {
@@ -30,8 +57,6 @@ class Store_holder():
 
         user_media_input = type_map[media_type]
         self.main_holder.append(user_media_input)
-
-        self.display_all()
 
         # if media_type == "book":
         #     user_media_input = Book(media_name, media_rating, media_status, media_notes)
@@ -49,20 +74,36 @@ class Store_holder():
         for content in (self.main_holder):
             print(content.display())
 
-
-    def sort_by_attribute(self, attr):
+    def sort_by_attribute(self):
         
+        print("\n--- Sort or Filter By ---")
+        print("1. Game")
+        print("2. Anime")
+        print("3. Book")
+        print("4. Movie")
+        print("5. Rating")
+        print("6. Alphabetical")
+        print("7. Status")
+        
+        choice = int(input("Enter your choice: ")).lower()
+
         type_map = {
-            "game": Game,
-            "anime": Anime,
-            "book": Book,
+            1: (Game, "type"),
+            2: (Anime, "type"),
+            3: (Book, "type"),
+            4: (Movie, "type"),
+            5: ("rating", "attr"),
+            6: ("title", "attr"),
+            7: ("status", "attr"),
+
         }
 
-        if attr in type_map():
-            return [x for x in self.main_holder if isinstance(x, type_map[attr])]
-        else:
-            return sorted(self.main_holder, key=lambda x: getattr(x, attr))
+        value_category, category = type_map[choice]
 
+        if category == "type":
+            return [x for x in self.main_holder if isinstance(x, type_map[value_category])]
+        else:
+            return sorted(self.main_holder, key=lambda x: getattr(x, value_category))
         
 
 class Media():
@@ -75,7 +116,7 @@ class Media():
         self.type = type
 
     def display(self):
-        print(f"Type: {self.type} | Title: {self.title} | Rating: {self.rating} | Status: {self.status} | Notes: {self.notes} ")
+        return (f"Type: {self.type} | Title: {self.title} | Rating: {self.rating} | Status: {self.status}% | Notes: {self.notes} ")
 
 
 class Book(Media):
@@ -89,7 +130,13 @@ class Anime(Media):
 class Game(Media):
     pass
 
+class Movie(Media):
+    pass
+
+
+
 
 start = Store_holder()
 
-start.user_add()
+start.main()
+

@@ -48,7 +48,7 @@ class Store_holder():
             self.save()
 
     def user_add(self):
-        media_type = str(input("Do you want to enter a book, game, or anime? ")).lower()
+        media_type = str(input("Do you want to enter a book, game, movie, or anime? ")).lower()
         media_name = str(input("What is the name? ")).lower()
         media_rating = int(input("What would you rate it out of 10? "))
         media_status = int(input("What is your completion status?(Enter a percentage) "))
@@ -58,6 +58,7 @@ class Store_holder():
             "game": Game(media_name, media_rating, media_status, media_notes, media_type),
             "anime": Anime(media_name, media_rating, media_status, media_notes, media_type),
             "book": Book(media_name, media_rating, media_status, media_notes, media_type),
+            "movie": Movie(media_name, media_rating, media_status, media_notes, media_type),
         }
 
         user_media_input = type_map[media_type]

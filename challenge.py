@@ -144,6 +144,7 @@ class Store_holder():
             "book": Book,
             "anime": Anime,
             "game": Game,
+            "movie": Movie,
         }
         try:
             with open("media.json", "r") as f:

@@ -1,3 +1,4 @@
+import json
 class Store_holder():
     
     def __init__(self):
@@ -18,13 +19,15 @@ class Store_holder():
 
     
     def main(self):
-            
+        self.load()
         while True:
+            # print(self.main_holder)
             print("\n--- Media Tracker ---")
             print("1. Add media")
             print("2. View all")
-            print("3. Sort")
-            print("4. Quit")
+            print("3. Sort/Filter")
+            print("4. Remove")
+            print("5. Quit")
             
             choice = int(input("Enter choice: "))
 
@@ -32,21 +35,23 @@ class Store_holder():
                 1: self.user_add,
                 2: self.display_all,
                 3: self.sort_by_attribute,
-                4: None,
+                4: self.remove,
+                5: None,
             }
 
-            if choice == 4:
+            if choice == 5:
                 break
             elif choice in options:
                 options[choice]()
             else:
                 print("Invalid input")
+            self.save()
 
     def user_add(self):
         media_type = str(input("Do you want to enter a book, game, or anime? ")).lower()
         media_name = str(input("What is the name? ")).lower()
-        media_rating = str(input("What would you rate it out of 10? ")).lower()
-        media_status = str(input("What is your completion status?(Enter a percentage) ")).lower()
+        media_rating = int(input("What would you rate it out of 10? "))
+        media_status = int(input("What is your completion status?(Enter a percentage) "))
         media_notes = str(input("Any other notes or comments about it? ")).lower()
 
         type_map = {
@@ -85,7 +90,7 @@ class Store_holder():
         print("6. Alphabetical")
         print("7. Status")
         
-        choice = int(input("Enter your choice: ")).lower()
+        choice = int(input("Enter your choice: "))
 
         type_map = {
             1: (Game, "type"),
@@ -101,10 +106,55 @@ class Store_holder():
         value_category, category = type_map[choice]
 
         if category == "type":
-            return [x for x in self.main_holder if isinstance(x, type_map[value_category])]
+            sorted_list = ([x for x in self.main_holder if isinstance(x, value_category)])
+            for content in (sorted_list):
+                print(content.display())
         else:
-            return sorted(self.main_holder, key=lambda x: getattr(x, value_category))
+            if value_category == "rating" or value_category == "status":
+                sorted_list = (sorted(self.main_holder, key=lambda x: getattr(x, value_category), reverse=True))
+                self.main_holder = sorted_list
+            else:
+                sorted_list = (sorted(self.main_holder, key=lambda x: getattr(x, value_category)))
+                self.main_holder = sorted_list
         
+    def remove(self):
+        
+        choice = str(input("Which media do you want to remove? ")).lower()
+
+        for i in self.main_holder:
+            if i.title == choice:
+                self.main_holder.remove(i)
+                print(f"Removed {i.title}. ")
+                break
+
+
+    def save(self):
+        user_data = []
+        
+        for i in self.main_holder:
+            user_data.append(vars(i))
+
+        with open("media.json", "w") as f:
+            json.dump(user_data, f)
+    
+    def load(self):
+        
+        type_chart = {
+            "book": Book,
+            "anime": Anime,
+            "game": Game,
+        }
+        try:
+            with open("media.json", "r") as f:
+                user_data = json.load(f)
+                for item in user_data:
+                    self.main_holder.append(type_chart[item["type"]](item["title"], item["rating"], item["status"], item["notes"], item["type"]))
+        except:
+            pass
+
+                
+
+
 
 class Media():
 

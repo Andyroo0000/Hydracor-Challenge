@@ -1,4 +1,4 @@
-Here are the grammar and spelling corrections, keeping everything else the same:
+
 a) The hardest part for me was the beginning in structure. I often find myself struggling to decide on a good structure to use. In this project I started to make nested dictionaries instead of objects which is fine but not as great. So that took some time thinking it over.
 
 b) One major issue is that one mis-input from the user will crash the program. There is no fallback such as when the user types in a media type that's not a book, game, anime, or movie. Also, when I created the sort and filter, I was going to put the filtered media items into a new separate list and then also sort it within the main list and sub-media list. Although, I ended up just printing the filtered list directly and then changing the main list when sorting.
